@@ -1,5 +1,6 @@
 import streamlit as st
 import pdfplumber
+from utils import split_documents_dict, extract_query_results
 
 st.title("Document Research & Theme Identification Chatbot!")
 st.write("Upload documents and process them here.")
@@ -21,10 +22,19 @@ if uploaded_files:
                 files_dict[file.name] = text
         # st.text_area("Extracted Text:", extracted_text, height=300)
 
+        #########################################
+        print(files_dict)
+        vector_storage = split_documents_dict(files_dict)
+        results = extract_query_results(vector_storage, query="")
+        ##########################################
+
         # Submit button
         if st.button("Submit"):
             # st.session_state["extracted_text"] = extracted_text  # Store text for chatbot
             st.page_link("pages/chatbot_ui.py")
+
+
+
 
 
 
