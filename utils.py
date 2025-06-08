@@ -5,10 +5,22 @@ from langchain.embeddings import OpenAIEmbeddings
 from langchain.chains import RetrievalQA
 from langchain.llms import OpenAI
 from langchain.embeddings import HuggingFaceEmbeddings
+import torch
+import os
+from llm_connections import llm
+
+torch.classes.__path__ = [os.path.join(torch.__path__[0], "torch.classes")]
+
+import asyncio
+
+try:
+    asyncio.get_running_loop()
+except RuntimeError:
+    asyncio.set_event_loop(asyncio.new_event_loop())
 
 # Sample dictionary with file data
-# embedding_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
-embedding_model = HuggingFaceEmbeddings(model_name="hkunlp/instructor-xl")
+embedding_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+# embedding_model = HuggingFaceEmbeddings(model_name="hkunlp/instructor-xl")
 
 # from sentence_transformers import SentenceTransformer
 
@@ -16,7 +28,7 @@ embedding_model = HuggingFaceEmbeddings(model_name="hkunlp/instructor-xl")
 
 
 def split_documents_dict(file_data_dict):
-    embedding_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
+    # embedding_model = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
 
     # Convert dictionary into a list of Document objects
     documents = [Document(page_content=data, metadata={"source": file_name}) for file_name, data in file_data_dict.items()]
@@ -46,11 +58,15 @@ def split_documents_dict(file_data_dict):
 
 def extract_query_results(vectorstore, query):
     # Setup retrieval system
-    qa = RetrievalQA.from_chain_type(llm=OpenAI(), chain_type="stuff", retriever=vectorstore.as_retriever())
+    qa = RetrievalQA.from_chain_type(llm=llm, chain_type="stuff", retriever=vectorstore.as_retriever())
 
     # Ask a question
-    query = "What is the main concept discussed in these documents?"
+    # query = "What is the main concept discussed in these documents?"
     response = qa.run(query)
 
-    print(response)
+    return response
 
+try:
+    asyncio.get_running_loop()
+except RuntimeError:
+    asyncio.set_event_loop(asyncio.new_event_loop())

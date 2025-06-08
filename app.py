@@ -2,6 +2,7 @@ from flask import Flask, render_template
 import subprocess
 
 app = Flask(__name__)
+app.run(debug=False)
 
 # Start Streamlit UI
 def run_streamlit():

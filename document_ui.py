@@ -23,9 +23,11 @@ if uploaded_files:
         # st.text_area("Extracted Text:", extracted_text, height=300)
 
         #########################################
-        print(files_dict)
+        print('files_dict::::::::::::::',files_dict)
         vector_storage = split_documents_dict(files_dict)
-        results = extract_query_results(vector_storage, query="")
+        st.session_state.vector_storage = vector_storage
+
+        # results = extract_query_results(vector_storage, query="")
         ##########################################
 
         # Submit button
