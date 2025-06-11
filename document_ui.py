@@ -2,6 +2,10 @@ import streamlit as st
 import pdfplumber
 from utils import split_documents_dict, extract_query_results
 
+__import__('pysqlite3')
+import sys
+sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+
 st.title("Document Research & Theme Identification Chatbot!")
 st.write("Upload documents and process them here.")
 
